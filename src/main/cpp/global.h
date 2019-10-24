@@ -43,7 +43,7 @@ namespace MWEngine {
 // (note this requires both android.permission.RECORD_AUDIO and android.permission.MODIFY_AUDIO_SETTINGS with a
 // positive value for AudioEngineProps::INPUT_CHANNELS)
 
-//#define RECORD_DEVICE_INPUT
+#define RECORD_DEVICE_INPUT
 
 // if you wish to write the engine output to the devices file system, uncomment the ALLOW_WRITING definition
 // (note this requires android.permission.WRITE_EXTERNAL_STORAGE), like RECORD_AUDIO this requires a Runtime Permission
