@@ -6,19 +6,16 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.1.3'
     }
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "nl.igorski.example"
         minSdkVersion 16
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0.0"
     }
     if ( project.hasProperty( "RELEASE_STORE_FILE" )) {
         signingConfigs {
@@ -57,4 +54,26 @@ def coreWrapperDir = new File("${projectDir}/src/main/java/nl/igorski/lib/audio/
 
 task createCoreWrapperDir {
     coreWrapperDir.mkdirs()
+}
+
+allprojects {
+    repositories {
+        // The order in which you list these repositories matter.
+        google()
+        jcenter()
+    }
+}
+
+task runSwig(type: Exec, dependsOn: ['createCoreWrapperDir']) {
+
+    String osName = System.getProperty("os.name").toLowerCase();
+    if (osName.contains("windows")) {
+        workingDir 'src/main/cpp'   // This implicitly starts from $(projectDir) evidently
+        commandLine 'cmd', '/c', 'swig'
+        args '-java', '-package', 'nl.igorski.lib.audio.mwengine', '-DNO_RTIO', '-c++', '-lcarrays.i', '-verbose', '-outdir', coreWrapperDir.absolutePath, '-I/usr/local/include', '-I/System/Library/Frameworks/JavaVM.framework/Headers', '-I./jni', '-o', "${projectDir}/src/main/cpp/jni/java_interface_wrap.cpp", "${projectDir}/src/main/cpp/mwengine.i"
+    } else {
+        commandLine 'swig'
+        args '-java', '-package', 'nl.igorski.lib.audio.mwengine', '-DNO_RTIO', '-c++', '-lcarrays.i', '-verbose', '-outdir', coreWrapperDir.absolutePath, '-I/usr/local/include', '-I/System/Library/Frameworks/JavaVM.framework/Headers', '-I./jni', '-o', "${projectDir}/src/main/cpp/jni/java_interface_wrap.cpp", "${projectDir}/src/main/cpp/mwengine.i"
+    }
+
 }
