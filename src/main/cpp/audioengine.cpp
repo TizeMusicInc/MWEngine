@@ -400,11 +400,11 @@ namespace MWEngine {
 
                 // and perform a fail-safe check in case we're exceeding the headroom ceiling
 
-                if ( sample < -1.0 )
-                    sample = -1.0f;
+                if ( sample < -0.9999 )
+                    sample = -0.9999f;
 
-                else if ( sample > +1.0 )
-                    sample = +1.0f;
+                else if ( sample > +0.9999 )
+                    sample = +0.9999f;
 
                 // write output interleaved (e.g. a sample per output channel
                 // before continuing writing the next sample for the next channel range)
